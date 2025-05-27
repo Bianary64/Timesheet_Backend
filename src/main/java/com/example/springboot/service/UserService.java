@@ -26,7 +26,6 @@ public class UserService {
     private UserRepository userRepository;
 
     public List<User> getAllUsers(Map<String, String> payload) {
-        logger.info("----" + payload.get("tenantId"));
         List<User> users = userRepository.getAllUsers(Long.parseLong(payload.get("tenantId")));
 
         return users;
