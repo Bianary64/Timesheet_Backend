@@ -26,12 +26,23 @@ public class TaskService {
     @Autowired
     TaskRepository taskRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     public List<Map<String, Object>> getAllTasks(Map<String, String> payload) {
         Long tenantId = Long.parseLong(payload.get("tenantId"));
+        Long userId = Long.parseLong(payload.get("userId"));
 
-        List<Map<String, Object>> data = taskRepository.getAllDataByTenantId(tenantId);
+        User user = userRepository.getUserById(userId);
+        if ("User".equals(user.getRole())) {
+            List<Map<String, Object>> data = taskRepository.getDataByUserIdAndTenantId(userId, tenantId);
 
-        return data;
+            return data;
+        } else {
+            List<Map<String, Object>> data = taskRepository.getAllDataByTenantId(tenantId);
+
+            return data;
+        }
     }
 
     public Map<String, Object> addTask(Map<String, String> payload) {
@@ -70,8 +81,9 @@ public class TaskService {
     public List<Map<String, Object>> getTasksByProject(Map<String, String> payload) {
         Long tenantId = Long.parseLong(payload.get("tenantId"));
         Long projectId = Long.parseLong(payload.get("projectId"));
+        Long userId = Long.parseLong(payload.get("userId"));
 
-        List<Map<String, Object>> result = taskRepository.getDataByProject(tenantId, projectId);
+        List<Map<String, Object>> result = taskRepository.getDataByProject(tenantId, projectId, userId);
 
         return result;
     }

@@ -22,6 +22,14 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
             """, nativeQuery = true)
     List<Map<String, Object>> getAllDataByTenantId(@Param("tenantId") Long tenantId);
 
+    @Query(value = """
+            SELECT t.id, t.date, t.project_id AS projectId, p.name AS projectName, t.task_id AS taskId, s.title AS taskName,
+            t.description, t.hours
+            FROM timesheet t JOIN project p ON t.project_id = p.id JOIN task s ON t.task_id = s.id
+            WHERE t.tenant_id = :tenantId AND t.user_id = :userId AND t.status = 1
+            """, nativeQuery = true)
+    List<Map<String, Object>> getDataByUserIdAndTenantId(@Param("userId") Long userId, @Param("tenantId") Long tenantId);
+
     @Modifying
     @Transactional
     @Query(value= """

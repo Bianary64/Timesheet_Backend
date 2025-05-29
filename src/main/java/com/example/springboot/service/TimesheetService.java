@@ -23,12 +23,23 @@ public class TimesheetService {
     @Autowired
     TimesheetRepository timesheetRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     public List<Map<String, Object>> getTimeEntries(Map<String, String> payload) {
         Long tenantId = Long.parseLong(payload.get("tenantId"));
+        Long userId = Long.parseLong(payload.get("userId"));
 
-        List<Map<String, Object>> data = timesheetRepository.getAllDataByTenantId(tenantId);
+        User user = userRepository.getUserById(userId);
+        if ("User".equals(user.getRole())) {
+            List<Map<String, Object>> data = timesheetRepository.getDataByUserIdAndTenantId(userId, tenantId);
 
-        return data;
+            return data;
+        } else {
+            List<Map<String, Object>> data = timesheetRepository.getAllDataByTenantId(tenantId);
+
+            return data;
+        }
     }
 
     public Map<String, Object> addTimeEntry(Map<String, String> payload) {
