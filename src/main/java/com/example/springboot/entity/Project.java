@@ -14,6 +14,8 @@ public class Project {
 
     private Long tenant_id;
 
+    private Long user_id;
+
     private String name;
 
     private String description;
@@ -31,9 +33,10 @@ public class Project {
     public Project() {
     }
 
-    public Project(Long tenant_id, String name, String description, String project_status, LocalDate start_date, LocalDate end_date,
+    public Project(Long tenant_id, Long user_id, String name, String description, String project_status, LocalDate start_date, LocalDate end_date,
                    Integer team_size, Integer status) {
         this.tenant_id = tenant_id;
+        this.user_id = user_id;
         this.name = name;
         this.description = description;
         this.project_status = project_status;
@@ -113,5 +116,13 @@ public class Project {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Long getUser_id() {
+        return user_id;
+    }
+
+    public void setUser_id(Long user_id) {
+        this.user_id = user_id;
     }
 }

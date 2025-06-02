@@ -34,8 +34,18 @@ public class ProjectController {
         return projectService.addProject(payload);
     }
 
+    @PostMapping("/updateProjectStatus")
+    public Map<String, Object> updateProjectStatus(@RequestBody Map<String, String> payload) {
+        return projectService.updateProjectStatus(payload);
+    }
+
     @PostMapping("/updateProject")
     public Map<String, Object> updateProject(@RequestBody Map<String, String> payload) {
         return projectService.updateProject(payload);
+    }
+
+    @PostMapping("/deleteProject")
+    public Map<String, Object> deleteProject(@RequestBody Map<String, String> payload) {
+        return projectService.deleteProject(payload);
     }
 }

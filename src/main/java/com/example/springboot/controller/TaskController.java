@@ -44,4 +44,9 @@ public class TaskController {
     public List<Map<String, Object>> getTasksByProject(@RequestBody Map<String, String> payload) {
         return taskService.getTasksByProject(payload);
     }
+
+    @PostMapping("/deleteTask")
+    public Map<String, Object> deleteTask(@RequestBody Map<String, String> payload) {
+        return taskService.deleteTask(payload);
+    }
 }

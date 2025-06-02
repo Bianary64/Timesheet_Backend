@@ -25,12 +25,23 @@ public class ProjectService {
     @Autowired
     ProjectRepository projectRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     public List<Map<String, Object>> getAllProjects(Map<String, String> payload) {
         Long tenantId = Long.parseLong(payload.get("tenantId"));
+        Long userId = Long.parseLong(payload.get("userId"));
 
-        List<Map<String, Object>> data = projectRepository.getAllDataByTenantId(tenantId);
+        User user = userRepository.getUserById(userId);
+        if ("User".equals(user.getRole())) {
+            List<Map<String, Object>> data = projectRepository.getDataByUserIdAndTenantId(userId, tenantId);
 
-        return data;
+            return data;
+        } else {
+            List<Map<String, Object>> data = projectRepository.getAllDataByTenantId(tenantId);
+
+            return data;
+        }
     }
 
     public Map<String, Object> addProject(Map<String, String> payload) {
@@ -48,8 +59,22 @@ public class ProjectService {
         LocalDate localEndDate = zonedDateTime2.toLocalDate();
         newProject.setEnd_date(localEndDate);
         newProject.setTeam_size(Integer.parseInt(payload.get("teamSize")));
+        newProject.setUser_id(Long.parseLong(payload.get("userId")));
         newProject.setStatus(1);
         projectRepository.save(newProject);
+
+        result.put("result", 1);
+
+        return result;
+    }
+
+    public Map<String, Object> updateProjectStatus(Map<String, String> payload) {
+        Map<String, Object> result = new HashMap<>();
+
+        Project existingProject = projectRepository.getDataById(Long.parseLong(payload.get("projectId")));
+        existingProject.setProject_status(payload.get("status"));
+        existingProject.setUser_id(Long.parseLong(payload.get("userId")));
+        projectRepository.save(existingProject);
 
         result.put("result", 1);
 
@@ -60,10 +85,27 @@ public class ProjectService {
         Map<String, Object> result = new HashMap<>();
 
         Project existingProject = projectRepository.getDataById(Long.parseLong(payload.get("projectId")));
+        existingProject.setTenant_id(Long.parseLong(payload.get("tenantId")));
+        existingProject.setName(payload.get("name"));
+        existingProject.setDescription(payload.get("description"));
         existingProject.setProject_status(payload.get("status"));
+        existingProject.setStart_date(LocalDate.parse(payload.get("startDate")));
+        existingProject.setEnd_date(LocalDate.parse(payload.get("endDate")));
+        existingProject.setTeam_size(Integer.parseInt(payload.get("teamSize")));
+        existingProject.setUser_id(Long.parseLong(payload.get("userId")));
+        existingProject.setStatus(1);
         projectRepository.save(existingProject);
 
         result.put("result", 1);
+
+        return result;
+    }
+
+    public Map<String, Object> deleteProject(Map<String, String> payload) {
+        Map<String, Object> result = new HashMap<>();
+
+        Long projectId = Long.parseLong(payload.get("projectId"));
+        projectRepository.deleteDataById(projectId);
 
         return result;
     }
