@@ -87,4 +87,13 @@ public class TaskService {
 
         return result;
     }
+
+    public Map<String, Object> deleteTask(Map<String, String> payload) {
+        Map<String, Object> result = new HashMap<>();
+
+        Long taskId = Long.parseLong(payload.get("taskId"));
+        taskRepository.deleteDataById(taskId);
+
+        return result;
+    }
 }

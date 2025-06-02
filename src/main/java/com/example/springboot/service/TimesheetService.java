@@ -42,6 +42,24 @@ public class TimesheetService {
         }
     }
 
+    public Map<String, Object> getTimeEntriesOverview(Map<String, String> payload) {
+        Map<String, Object> result = new HashMap<>();
+
+        Long tenantId = Long.parseLong(payload.get("tenantId"));
+        LocalDate startDate = LocalDate.parse(payload.get("startDate"));
+        LocalDate endDate = LocalDate.parse(payload.get("endDate"));
+
+        List<Map<String, Object>> entries = timesheetRepository.getEntries(tenantId, startDate, endDate);
+        List<Map<String, Object>> projects = timesheetRepository.getProjects(tenantId, startDate, endDate);
+        List<Map<String, Object>> users = timesheetRepository.getUsers(tenantId, startDate, endDate);
+
+        result.put("entries", entries);
+        result.put("projects", projects);
+        result.put("users", users);
+
+        return result;
+    }
+
     public Map<String, Object> addTimeEntry(Map<String, String> payload) {
         Map<String, Object> result = new HashMap<>();
 
@@ -70,6 +88,8 @@ public class TimesheetService {
 
         Long timeEntryId = Long.parseLong(payload.get("timeEntryId"));
         timesheetRepository.deleteDataById(timeEntryId);
+
+        result.put("result", 1);
 
         return result;
     }
