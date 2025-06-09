@@ -40,6 +40,11 @@ public class TaskController {
         return taskService.updateTask(payload);
     }
 
+    @PostMapping("/updateTaskStatus")
+    public Map<String, Object> updateTaskStatus(@RequestBody Map<String, String> payload) {
+        return taskService.updateTaskStatus(payload);
+    }
+
     @PostMapping("/getTasksByProject")
     public List<Map<String, Object>> getTasksByProject(@RequestBody Map<String, String> payload) {
         return taskService.getTasksByProject(payload);

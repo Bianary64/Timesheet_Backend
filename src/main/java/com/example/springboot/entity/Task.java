@@ -22,6 +22,10 @@ public class Task {
 
     private String title;
 
+    private LocalDate start_date;
+
+    private LocalDate end_date;
+
     private LocalDate created_at;
 
     private LocalDate updated_at;
@@ -31,12 +35,15 @@ public class Task {
     public Task() {
     }
 
-    public Task(Long tenant_id, Long project_id, String title, String task_status, Long user_id, LocalDate created_at, LocalDate updated_at, Integer status) {
+    public Task(Long tenant_id, Long project_id, String title, String task_status, Long user_id, LocalDate start_date, LocalDate end_date,
+                LocalDate created_at, LocalDate updated_at, Integer status) {
         this.tenant_id = tenant_id;
         this.project_id = project_id;
         this.task_status = task_status;
         this.title = title;
         this.user_id = user_id;
+        this.start_date = start_date;
+        this.end_date = end_date;
         this.created_at = created_at;
         this.updated_at = updated_at;
         this.status = status;
@@ -112,5 +119,21 @@ public class Task {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public LocalDate getStart_date() {
+        return start_date;
+    }
+
+    public void setStart_date(LocalDate start_date) {
+        this.start_date = start_date;
+    }
+
+    public LocalDate getEnd_date() {
+        return end_date;
+    }
+
+    public void setEnd_date(LocalDate end_date) {
+        this.end_date = end_date;
     }
 }

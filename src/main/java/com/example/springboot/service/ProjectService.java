@@ -52,12 +52,8 @@ public class ProjectService {
         newProject.setName(payload.get("name"));
         newProject.setDescription(payload.get("description"));
         newProject.setProject_status(payload.get("status"));
-        ZonedDateTime zonedDateTime1 = ZonedDateTime.parse(payload.get("startDate"));
-        LocalDate localStartDate = zonedDateTime1.toLocalDate();
-        newProject.setStart_date(localStartDate);
-        ZonedDateTime zonedDateTime2 = ZonedDateTime.parse(payload.get("endDate"));
-        LocalDate localEndDate = zonedDateTime2.toLocalDate();
-        newProject.setEnd_date(localEndDate);
+        newProject.setStart_date(LocalDate.parse(payload.get("startDate")));
+        newProject.setEnd_date(LocalDate.parse(payload.get("endDate")));
         newProject.setTeam_size(Integer.parseInt(payload.get("teamSize")));
         newProject.setUser_id(Long.parseLong(payload.get("userId")));
         newProject.setStatus(1);

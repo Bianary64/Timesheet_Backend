@@ -36,6 +36,11 @@ public class TimesheetController {
         return timesheetService.getTimeEntriesOverview(payload);
     }
 
+    @PostMapping("getTimeEntriesReview")
+    public Map<String, Object> getTimeEntriesReview(@RequestBody Map<String, String> payload) {
+        return timesheetService.getTimeEntriesReview(payload);
+    }
+
     @PostMapping("/addTimeEntry")
     public Map<String, Object> addTimeEntry(@RequestBody Map<String, String> payload) {
         return timesheetService.addTimeEntry(payload);
