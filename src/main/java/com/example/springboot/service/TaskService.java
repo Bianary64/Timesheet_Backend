@@ -74,6 +74,9 @@ public class TaskService {
         LocalDate now = LocalDate.now();
 
         Task existingTask = taskRepository.getDataById(Long.parseLong(payload.get("taskId")));
+
+        existingTask.setTitle(payload.get("title"));
+        existingTask.setProject_id(Long.parseLong(payload.get("projectId")));
         existingTask.setTask_status(payload.get("status"));
         existingTask.setStart_date(LocalDate.parse(payload.get("startDate")));
         existingTask.setEnd_date(LocalDate.parse(payload.get("dueDate")));
