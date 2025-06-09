@@ -7,6 +7,7 @@ import com.example.springboot.entity.Tenant;
 import com.example.springboot.entity.User;
 import com.example.springboot.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,6 +57,8 @@ public class TaskService {
         newTask.setTitle(payload.get("title"));
         newTask.setUser_id(Long.parseLong(payload.get("userId")));
         newTask.setTask_status(payload.get("status"));
+        newTask.setStart_date(LocalDate.parse(payload.get("startDate")));
+        newTask.setEnd_date(LocalDate.parse(payload.get("dueDate")));
         newTask.setCreated_at(now);
         newTask.setUpdated_at(now);
         newTask.setStatus(1);
@@ -68,9 +71,27 @@ public class TaskService {
 
     public Map<String, Object> updateTask(Map<String, String> payload) {
         Map<String, Object> result = new HashMap<>();
+        LocalDate now = LocalDate.now();
 
         Task existingTask = taskRepository.getDataById(Long.parseLong(payload.get("taskId")));
         existingTask.setTask_status(payload.get("status"));
+        existingTask.setStart_date(LocalDate.parse(payload.get("startDate")));
+        existingTask.setEnd_date(LocalDate.parse(payload.get("dueDate")));
+        existingTask.setUpdated_at(now);
+        taskRepository.save(existingTask);
+
+        result.put("result", 1);
+
+        return result;
+    }
+
+    public Map<String, Object> updateTaskStatus(Map<String, String> payload) {
+        Map<String, Object> result = new HashMap<>();
+        LocalDate now = LocalDate.now();
+
+        Task existingTask = taskRepository.getDataById(Long.parseLong(payload.get("taskId")));
+        existingTask.setTask_status(payload.get("status"));
+        existingTask.setUpdated_at(now);
         taskRepository.save(existingTask);
 
         result.put("result", 1);
@@ -94,6 +115,7 @@ public class TaskService {
         Long taskId = Long.parseLong(payload.get("taskId"));
         taskRepository.deleteDataById(taskId);
 
+        result.put("result", 1);
         return result;
     }
 }

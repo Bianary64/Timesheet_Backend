@@ -30,19 +30,38 @@ public class TimesheetService {
         Long tenantId = Long.parseLong(payload.get("tenantId"));
         Long userId = Long.parseLong(payload.get("userId"));
 
-        User user = userRepository.getUserById(userId);
-        if ("User".equals(user.getRole())) {
+//        User user = userRepository.getUserById(userId);
+//        if ("User".equals(user.getRole())) {
             List<Map<String, Object>> data = timesheetRepository.getDataByUserIdAndTenantId(userId, tenantId);
 
             return data;
-        } else {
-            List<Map<String, Object>> data = timesheetRepository.getAllDataByTenantId(tenantId);
-
-            return data;
-        }
+//        } else {
+//            List<Map<String, Object>> data = timesheetRepository.getAllDataByTenantId(tenantId);
+//
+//            return data;
+//        }
     }
 
     public Map<String, Object> getTimeEntriesOverview(Map<String, String> payload) {
+        Map<String, Object> result = new HashMap<>();
+
+        Long tenantId = Long.parseLong(payload.get("tenantId"));
+        LocalDate startDate = LocalDate.parse(payload.get("startDate"));
+        LocalDate endDate = LocalDate.parse(payload.get("endDate"));
+        Long userId = Long.parseLong(payload.get("userId"));
+
+        List<Map<String, Object>> entries = timesheetRepository.getEntriesWithUserId(tenantId, startDate, endDate, userId);
+        List<Map<String, Object>> projects = timesheetRepository.getProjectsWithUserId(tenantId, startDate, endDate, userId);
+        List<Map<String, Object>> users = timesheetRepository.getUsers(tenantId, startDate, endDate);
+
+        result.put("entries", entries);
+        result.put("projects", projects);
+        result.put("users", users);
+
+        return result;
+    }
+
+    public Map<String, Object> getTimeEntriesReview(Map<String, String> payload) {
         Map<String, Object> result = new HashMap<>();
 
         Long tenantId = Long.parseLong(payload.get("tenantId"));

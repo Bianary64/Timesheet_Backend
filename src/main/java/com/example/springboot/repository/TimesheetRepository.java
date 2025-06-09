@@ -64,6 +64,29 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
 
     @Query(value = """
             SELECT\s
+                t.id,
+                t.date,
+                t.project_id as projectId,
+                p.name as projectName,
+                t.task_id as taskId,
+                tk.title as taskName,
+                t.description,
+                t.hours,
+                u.name AS userName,
+                u.id AS userId
+            FROM timesheet t
+            JOIN project p ON t.project_id = p.id
+            JOIN task tk ON t.task_id = tk.id
+            JOIN user u ON t.user_id = u.id
+            WHERE t.tenant_id = :tenantId
+                AND t.date BETWEEN :startDate AND :endDate AND t.status = 1 AND t.user_id = :userId
+            ORDER BY t.date DESC
+            """, nativeQuery = true)
+    List<Map<String, Object>> getEntriesWithUserId(@Param("tenantId") Long tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate,
+                                                   @Param("userId") Long userId);
+
+    @Query(value = """
+            SELECT\s
                 p.user_id AS userId,
                 COALESCE(SUM(t.hours), 0) as totalHours,
                 p.id,
@@ -72,11 +95,28 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
             LEFT JOIN timesheet t ON p.id = t.project_id
                 AND t.tenant_id = :tenantId
                 AND t.date BETWEEN :startDate AND :endDate
-            WHERE p.tenant_id = :tenantId AND p.status = 1
+            WHERE p.tenant_id = :tenantId AND p.status = 1 AND t.status = 1
             GROUP BY p.id, p.name
             HAVING COALESCE(SUM(t.hours), 0) > 0
             """, nativeQuery = true)
     List<Map<String, Object>> getProjects(@Param("tenantId") Long tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    @Query(value = """
+            SELECT\s
+                p.user_id AS userId,
+                COALESCE(SUM(t.hours), 0) as totalHours,
+                p.id,
+                p.name
+            FROM project p
+            LEFT JOIN timesheet t ON p.id = t.project_id
+                AND t.tenant_id = :tenantId
+                AND t.date BETWEEN :startDate AND :endDate
+            WHERE p.tenant_id = :tenantId AND p.status = 1 AND p.user_id = :userId AND t.status = 1
+            GROUP BY p.id, p.name
+            HAVING COALESCE(SUM(t.hours), 0) > 0
+            """, nativeQuery = true)
+    List<Map<String, Object>> getProjectsWithUserId(@Param("tenantId") Long tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate,
+                                                    @Param("userId") Long userId);
 
     @Query(value = """
             SELECT\s
@@ -87,7 +127,7 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
             LEFT JOIN timesheet t ON t.user_id = u.id
                 AND t.tenant_id = :tenantId
                 AND t.date BETWEEN :startDate AND :endDate
-            WHERE u.tenant_id = :tenantId AND u.status = 1
+            WHERE u.tenant_id = :tenantId AND u.status = 1 AND t.status = 1
             GROUP BY u.id, u.name
             HAVING COALESCE(SUM(t.hours), 0) > 0
             """, nativeQuery = true)
