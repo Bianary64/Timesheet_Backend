@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -108,6 +110,39 @@ public class AuthController {
                 result.put("result", 0);
                 result.put("msg", "Invalid password");
             }
+        }
+
+        return result;
+    }
+
+    @GetMapping("/email")
+    public Map<String, Object> loginByEmail(@RequestParam("email") String email) {
+        Map<String, Object> result = new HashMap<>();
+
+        User existingUser = userRepository.findByEmail(email);
+
+        // Check if the user exists and is active
+        if (existingUser == null || existingUser.getStatus() == 0) {
+            result.put("result", 0);
+            result.put("msg", "User not found");
+        } else {
+            // Update last login timestamp
+            LocalDateTime now = LocalDateTime.now();
+            existingUser.setLast_login(now);
+            userRepository.save(existingUser);
+
+            // Generate JWT token
+            String token = JwtUtil.generateToken(email);
+            logger.info("Login token generated for email {}: {}", email, token);
+
+            // Prepare response
+            result.put("result", 1);
+            result.put("token", token);
+            result.put("userId", existingUser.getId());
+            result.put("userEmail", existingUser.getEmail());
+            result.put("userName", existingUser.getName());
+            result.put("tenantId", existingUser.getTenant_id());
+            result.put("userRole", existingUser.getRole());
         }
 
         return result;
