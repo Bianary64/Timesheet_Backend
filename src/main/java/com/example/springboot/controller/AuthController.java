@@ -9,12 +9,9 @@ import com.example.springboot.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -43,6 +40,7 @@ public class AuthController {
         if (existingUser != null) {
             result.put("result", 0);
             result.put("msg", "The user already exists.");
+            result.put("user", null);
         } else {
             Tenant newTenant = new Tenant();
             newTenant.setStatus(1);
@@ -60,7 +58,7 @@ public class AuthController {
             newTenant.setTimezone("");
             Tenant tenant = tenantRepository.save(newTenant);
 
-            String name = payload.get("firstName") + " " + payload.get("lastName");
+            String name = payload.get("name");
             String password = PasswordUtil.hashPassword(payload.get("password"));
 
             User newUser = new User();
@@ -75,9 +73,64 @@ public class AuthController {
 
             result.put("result", 1);
             result.put("msg", "The user has been created successfully!");
+            result.put("user", user);
         }
 
         return result;
+    }
+
+    @PutMapping("/user")
+    public ResponseEntity<Map<String, Object>> updateUser(
+            @RequestParam("id") Long id,
+            @RequestBody Map<String, Object> updateBody) {
+
+        Map<String, Object> result = new HashMap<>();
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user == null || user.getStatus() == 0) {
+            result.put("result", 0);
+            result.put("msg", "User not found or inactive");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+
+        // Example: update name, email, role if present in body
+        if (updateBody.containsKey("name")) {
+            user.setName((String) updateBody.get("name"));
+        }
+        if (updateBody.containsKey("email")) {
+            user.setEmail((String) updateBody.get("email"));
+        }
+        if (updateBody.containsKey("role")) {
+            user.setRole((String) updateBody.get("role"));
+        }
+
+        userRepository.save(user);
+
+        result.put("result", 1);
+        result.put("msg", "User updated successfully");
+        result.put("user", user);
+        return ResponseEntity.ok(result);
+    }
+
+
+    @DeleteMapping("/user")
+    public ResponseEntity<Map<String, Object>> deleteUser(@RequestParam("id") Long id) {
+        Map<String, Object> result = new HashMap<>();
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user == null || user.getStatus() == 0) {
+            result.put("result", 0);
+            result.put("msg", "User not found or already inactive");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+        }
+
+        user.setStatus(0);
+        userRepository.save(user);
+
+
+        result.put("result", 1);
+        result.put("msg", "User has been deactivated (status set to 0)");
+        return ResponseEntity.ok(result);
     }
 
     @PostMapping("/login")
