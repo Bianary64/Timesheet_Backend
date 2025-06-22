@@ -10,6 +10,8 @@ public class Tenant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String tenant_id;
+
     private String company_name;
 
     private String email;
@@ -39,8 +41,9 @@ public class Tenant {
     public Tenant() {
     }
 
-    public Tenant(String company_name, String email, String tax_id, String phone, String address, String website, String city,
+    public Tenant(String tenant_id, String company_name, String email, String tax_id, String phone, String address, String website, String city,
                   String state, String zip_code, String fiscal_start_day, String currency, String timezone, Integer status) {
+        this.tenant_id = tenant_id;
         this.company_name = company_name;
         this.email = email;
         this.tax_id = tax_id;
@@ -68,6 +71,10 @@ public class Tenant {
         return company_name;
     }
 
+    public String getTenant_id() { return tenant_id; }
+    public void setTenant_id(String tenant_id) {
+        this.tenant_id = tenant_id;
+    }
     public void setCompany_name(String company_name) {
         this.company_name = company_name;
     }

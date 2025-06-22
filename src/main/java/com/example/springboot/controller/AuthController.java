@@ -44,6 +44,7 @@ public class AuthController {
         } else {
             Tenant newTenant = new Tenant();
             newTenant.setStatus(1);
+            newTenant.setTenant_id(payload.get("tenantId"));
             newTenant.setCompany_name("");
             newTenant.setEmail("");
             newTenant.setTax_id("");
@@ -62,7 +63,7 @@ public class AuthController {
             String password = PasswordUtil.hashPassword(payload.get("password"));
 
             User newUser = new User();
-            newUser.setTenant_id(tenant.getId());
+            newUser.setTenant_id(tenant.getTenant_id());
             newUser.setName(name);
             newUser.setPassword(password);
             newUser.setEmail(payload.get("email"));

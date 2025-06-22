@@ -44,7 +44,7 @@ public class UserService {
             String password = PasswordUtil.hashPassword(payload.get("password"));
 
             User newUser = new User();
-            newUser.setTenant_id(Long.parseLong(payload.get("tenantId")));
+            newUser.setTenant_id(payload.get("tenantId"));
             newUser.setName(payload.get("name"));
             newUser.setPassword(password);
             newUser.setEmail(payload.get("email"));
@@ -77,7 +77,7 @@ public class UserService {
                 existingUser.setPassword(password) ;
             }
 
-            existingUser.setTenant_id(Long.parseLong(payload.get("tenantId")));
+            existingUser.setTenant_id(payload.get("tenantId"));
             existingUser.setName(payload.get("name"));
             existingUser.setEmail(payload.get("email"));
             existingUser.setRole(payload.get("role"));
