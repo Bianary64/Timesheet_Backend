@@ -20,7 +20,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             FROM task t JOIN project p ON t.project_id = p.id JOIN user u ON t.user_id = u.id
             WHERE t.tenant_id = :tenantId AND t.status = 1
             """, nativeQuery = true)
-    List<Map<String, Object>> getAllDataByTenantId(@Param("tenantId") Long tenantId);
+    List<Map<String, Object>> getAllDataByTenantId(@Param("tenantId") String tenantId);
 
     @Query(value = """
             SELECT t.id, t.user_id AS userId, u.name AS user, t.title, p.name AS project, t.task_status AS status, t.start_date AS startDate, t.end_date AS dueDate,
@@ -28,7 +28,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             FROM task t JOIN project p ON t.project_id = p.id JOIN user u ON t.user_id = u.id
             WHERE t.user_id = :userId AND t.tenant_id = :tenantId AND t.status = 1
             """, nativeQuery = true)
-    List<Map<String, Object>> getDataByUserIdAndTenantId(@Param("userId") Long userId, @Param("tenantId") Long tenantId);
+    List<Map<String, Object>> getDataByUserIdAndTenantId(@Param("userId") Long userId, @Param("tenantId") String tenantId);
 
     @Query(value = """
             SELECT * FROM task WHERE id = :id AND status = 1
@@ -39,7 +39,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
             SELECT id, title AS name, project_id AS projectId, task_status AS status
             FROM task WHERE tenant_id = :tenantId AND project_id = :projectId AND user_id = :userId AND status = 1
             """, nativeQuery = true)
-    List<Map<String, Object>> getDataByProject(@Param("tenantId") Long tenantId, @Param("projectId") Long projectId, @Param("userId") Long userId);
+    List<Map<String, Object>> getDataByProject(@Param("tenantId") String tenantId, @Param("projectId") Long projectId, @Param("userId") Long userId);
 
     @Modifying
     @Transactional

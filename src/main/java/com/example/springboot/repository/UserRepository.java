@@ -26,14 +26,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = """
             SELECT * FROM user WHERE tenant_id = :tenantId AND status = 1
             """, nativeQuery = true)
-    List<User> getAllUsers(@Param("tenantId") Long tenantId);
+    List<User> getAllUsers(@Param("tenantId") String tenantId);
 
     @Modifying
     @Transactional
     @Query(value= """
             UPDATE user SET status = 0 WHERE id = :id AND tenant_id = :tenantId AND status = 1
             """, nativeQuery = true)
-    void deleteUserById(@Param("id") Long id, @Param("tenantId") Long tenantId);
+    void deleteUserById(@Param("id") Long id, @Param("tenantId") String tenantId);
 
     @Query(value = """
             SELECT * FROM user WHERE id = :id AND status = 1

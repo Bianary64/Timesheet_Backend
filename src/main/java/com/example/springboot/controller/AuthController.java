@@ -2,9 +2,7 @@ package com.example.springboot.controller;
 
 import com.example.springboot.Config.JwtUtil;
 import com.example.springboot.Config.PasswordUtil;
-import com.example.springboot.entity.Tenant;
 import com.example.springboot.entity.User;
-import com.example.springboot.repository.TenantRepository;
 import com.example.springboot.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +24,6 @@ public class AuthController {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    TenantRepository tenantRepository;
-
     @PostMapping("/signup")
     public Map<String, Object> signup(@RequestBody Map<String, String> payload) {
         Map<String, Object> result = new HashMap<>();
@@ -42,28 +37,11 @@ public class AuthController {
             result.put("msg", "The user already exists.");
             result.put("user", null);
         } else {
-            Tenant newTenant = new Tenant();
-            newTenant.setStatus(1);
-            newTenant.setTenant_id(payload.get("tenantId"));
-            newTenant.setCompany_name("");
-            newTenant.setEmail("");
-            newTenant.setTax_id("");
-            newTenant.setPhone("");
-            newTenant.setAddress("");
-            newTenant.setWebsite("");
-            newTenant.setCity("");
-            newTenant.setState("");
-            newTenant.setZip_code("");
-            newTenant.setFiscal_start_day("");
-            newTenant.setCurrency("");
-            newTenant.setTimezone("");
-            Tenant tenant = tenantRepository.save(newTenant);
-
             String name = payload.get("name");
             String password = PasswordUtil.hashPassword(payload.get("password"));
 
             User newUser = new User();
-            newUser.setTenant_id(tenant.getTenant_id());
+            newUser.setTenant_id(payload.get("tenantId"));
             newUser.setName(name);
             newUser.setPassword(password);
             newUser.setEmail(payload.get("email"));

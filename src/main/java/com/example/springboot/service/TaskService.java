@@ -1,20 +1,14 @@
 package com.example.springboot.service;
 
-import com.example.springboot.Config.PasswordUtil;
-import com.example.springboot.entity.Project;
 import com.example.springboot.entity.Task;
-import com.example.springboot.entity.Tenant;
 import com.example.springboot.entity.User;
 import com.example.springboot.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +25,7 @@ public class TaskService {
     UserRepository userRepository;
 
     public List<Map<String, Object>> getAllTasks(Map<String, String> payload) {
-        Long tenantId = Long.parseLong(payload.get("tenantId"));
+        String tenantId = payload.get("tenantId");
         Long userId = Long.parseLong(payload.get("userId"));
 
         User user = userRepository.getUserById(userId);
@@ -52,7 +46,7 @@ public class TaskService {
         LocalDate now = LocalDate.now();
 
         Task newTask = new Task();
-        newTask.setTenant_id(Long.parseLong(payload.get("tenantId")));
+        newTask.setTenant_id(payload.get("tenantId"));
         newTask.setProject_id(Long.parseLong(payload.get("projectId")));
         newTask.setTitle(payload.get("title"));
         newTask.setUser_id(Long.parseLong(payload.get("userId")));
@@ -103,7 +97,7 @@ public class TaskService {
     }
 
     public List<Map<String, Object>> getTasksByProject(Map<String, String> payload) {
-        Long tenantId = Long.parseLong(payload.get("tenantId"));
+        String tenantId = payload.get("tenantId");
         Long projectId = Long.parseLong(payload.get("projectId"));
         Long userId = Long.parseLong(payload.get("userId"));
 
