@@ -90,7 +90,7 @@ public class TimesheetService {
         newTimesheet.setProject_id(Long.parseLong(payload.get("projectId")));
         newTimesheet.setTask_id(Long.parseLong(payload.get("taskId")));
         newTimesheet.setDescription(payload.get("description"));
-        newTimesheet.setHours(Integer.parseInt(payload.get("hours")));
+        newTimesheet.setHours(Double.parseDouble(payload.get("hours")));
 //        ZonedDateTime zonedDateTime1 = ZonedDateTime.parse(payload.get("date"));
 //        LocalDate localStartDate = zonedDateTime1.toLocalDate();
         newTimesheet.setDate(LocalDate.parse(payload.get("date")));
