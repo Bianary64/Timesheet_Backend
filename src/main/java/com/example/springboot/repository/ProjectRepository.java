@@ -38,7 +38,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             GROUP BY\s
                 p.id
             """, nativeQuery = true)
-    List<Map<String, Object>> getAllDataByTenantId(@Param("tenantId") Long tenantId);
+    List<Map<String, Object>> getAllDataByTenantId(@Param("tenantId") String tenantId);
 
     @Query(value = """
             SELECT\s
@@ -64,7 +64,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
             GROUP BY\s
                 p.id
             """, nativeQuery = true)
-    List<Map<String, Object>> getDataByUserIdAndTenantId(@Param("userId") Long userId, @Param("tenantId") Long tenantId);
+    List<Map<String, Object>> getDataByUserIdAndTenantId(@Param("userId") Long userId, @Param("tenantId") String tenantId);
 
     @Query(value = """
             SELECT * FROM project WHERE id = :id AND status = 1

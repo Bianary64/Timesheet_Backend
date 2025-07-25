@@ -1,8 +1,6 @@
 package com.example.springboot.service;
 
-import com.example.springboot.Config.PasswordUtil;
 import com.example.springboot.entity.Project;
-import com.example.springboot.entity.Tenant;
 import com.example.springboot.entity.User;
 import com.example.springboot.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +25,7 @@ public class ProjectService {
     UserRepository userRepository;
 
     public List<Map<String, Object>> getAllProjects(Map<String, String> payload) {
-        Long tenantId = Long.parseLong(payload.get("tenantId"));
+        String tenantId = payload.get("tenantId");
         Long userId = Long.parseLong(payload.get("userId"));
 
         User user = userRepository.getUserById(userId);
@@ -48,7 +44,7 @@ public class ProjectService {
         Map<String, Object> result = new HashMap<>();
 
         Project newProject = new Project();
-        newProject.setTenant_id(Long.parseLong(payload.get("tenantId")));
+        newProject.setTenant_id(payload.get("tenantId"));
         newProject.setName(payload.get("name"));
         newProject.setDescription(payload.get("description"));
         newProject.setProject_status(payload.get("status"));
@@ -81,7 +77,7 @@ public class ProjectService {
         Map<String, Object> result = new HashMap<>();
 
         Project existingProject = projectRepository.getDataById(Long.parseLong(payload.get("projectId")));
-        existingProject.setTenant_id(Long.parseLong(payload.get("tenantId")));
+        existingProject.setTenant_id(payload.get("tenantId"));
         existingProject.setName(payload.get("name"));
         existingProject.setDescription(payload.get("description"));
         existingProject.setProject_status(payload.get("status"));

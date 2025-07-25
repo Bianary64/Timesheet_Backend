@@ -12,7 +12,7 @@ public class Timesheet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long tenant_id;
+    private String tenant_id;
 
     private Long project_id;
 
@@ -22,7 +22,7 @@ public class Timesheet {
 
     private LocalDate date;
 
-    private Integer hours;
+    private Double hours;
 
     private String description;
 
@@ -31,7 +31,7 @@ public class Timesheet {
     public Timesheet() {
     }
 
-    public Timesheet(Long tenant_id, Long project_id, Long task_id, Long user_id, LocalDate date, Integer hours, String description,
+    public Timesheet(String tenant_id, Long project_id, Long task_id, Long user_id, LocalDate date, Double hours, String description,
                      Integer status) {
         this.tenant_id = tenant_id;
         this.project_id = project_id;
@@ -51,11 +51,11 @@ public class Timesheet {
         this.id = id;
     }
 
-    public Long getTenant_id() {
+    public String getTenant_id() {
         return tenant_id;
     }
 
-    public void setTenant_id(Long tenant_id) {
+    public void setTenant_id(String tenant_id) {
         this.tenant_id = tenant_id;
     }
 
@@ -91,11 +91,11 @@ public class Timesheet {
         this.date = date;
     }
 
-    public Integer getHours() {
+    public Double getHours() {
         return hours;
     }
 
-    public void setHours(Integer hours) {
+    public void setHours(Double hours) {
         this.hours = hours;
     }
 

@@ -31,7 +31,7 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
             JOIN user u ON t.user_id = u.id
             WHERE t.tenant_id = :tenantId AND t.user_id = :userId AND t.status = 1
             """, nativeQuery = true)
-    List<Map<String, Object>> getDataByUserIdAndTenantId(@Param("userId") Long userId, @Param("tenantId") Long tenantId);
+    List<Map<String, Object>> getDataByUserIdAndTenantId(@Param("userId") Long userId, @Param("tenantId") String tenantId);
 
     @Modifying
     @Transactional
@@ -60,7 +60,7 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
                 AND t.date BETWEEN :startDate AND :endDate AND t.status = 1
             ORDER BY t.date DESC
             """, nativeQuery = true)
-    List<Map<String, Object>> getEntries(@Param("tenantId") Long tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    List<Map<String, Object>> getEntries(@Param("tenantId") String tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     @Query(value = """
             SELECT\s
@@ -82,7 +82,7 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
                 AND t.date BETWEEN :startDate AND :endDate AND t.status = 1 AND t.user_id = :userId
             ORDER BY t.date DESC
             """, nativeQuery = true)
-    List<Map<String, Object>> getEntriesWithUserId(@Param("tenantId") Long tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate,
+    List<Map<String, Object>> getEntriesWithUserId(@Param("tenantId") String tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate,
                                                    @Param("userId") Long userId);
 
     @Query(value = """
@@ -99,7 +99,7 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
             GROUP BY p.id, p.name
             HAVING COALESCE(SUM(t.hours), 0) > 0
             """, nativeQuery = true)
-    List<Map<String, Object>> getProjects(@Param("tenantId") Long tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    List<Map<String, Object>> getProjects(@Param("tenantId") String tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     @Query(value = """
             SELECT\s
@@ -115,7 +115,7 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
             GROUP BY p.id, p.name
             HAVING COALESCE(SUM(t.hours), 0) > 0
             """, nativeQuery = true)
-    List<Map<String, Object>> getProjectsWithUserId(@Param("tenantId") Long tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate,
+    List<Map<String, Object>> getProjectsWithUserId(@Param("tenantId") String tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate,
                                                     @Param("userId") Long userId);
 
     @Query(value = """
@@ -131,5 +131,5 @@ public interface TimesheetRepository extends JpaRepository<Timesheet, Long> {
             GROUP BY u.id, u.name
             HAVING COALESCE(SUM(t.hours), 0) > 0
             """, nativeQuery = true)
-    List<Map<String, Object>> getUsers(@Param("tenantId") Long tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    List<Map<String, Object>> getUsers(@Param("tenantId") String tenantId, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }

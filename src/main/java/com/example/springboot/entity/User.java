@@ -14,7 +14,7 @@ public class User {
     private Long id;
 
     @Column(nullable = false)
-    private Long tenant_id;
+    private String tenant_id;
 
     @Column(nullable = false)
     private String name;
@@ -36,7 +36,7 @@ public class User {
     public User() {
     }
 
-    public User(Long tenant_id, String name, String email, String password, String role, Integer status, LocalDateTime last_login) {
+    public User(String tenant_id, String name, String email, String password, String role, Integer status, LocalDateTime last_login) {
         this.tenant_id = tenant_id;
         this.name = name;
         this.email = email;
@@ -94,11 +94,11 @@ public class User {
         this.status = status;
     }
 
-    public Long getTenant_id() {
+    public String getTenant_id() {
         return tenant_id;
     }
 
-    public void setTenant_id(Long tenant_id) {
+    public void setTenant_id(String tenant_id) {
         this.tenant_id = tenant_id;
     }
 

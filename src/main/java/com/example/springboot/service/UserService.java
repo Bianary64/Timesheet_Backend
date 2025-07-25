@@ -1,7 +1,6 @@
 package com.example.springboot.service;
 
 import com.example.springboot.Config.PasswordUtil;
-import com.example.springboot.entity.Tenant;
 import com.example.springboot.entity.User;
 import com.example.springboot.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,13 +18,10 @@ public class UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
-    private TenantRepository tenantRepository;
-
-    @Autowired
     private UserRepository userRepository;
 
     public List<User> getAllUsers(Map<String, String> payload) {
-        List<User> users = userRepository.getAllUsers(Long.parseLong(payload.get("tenantId")));
+        List<User> users = userRepository.getAllUsers(payload.get("tenantId"));
 
         return users;
     }
@@ -44,7 +39,7 @@ public class UserService {
             String password = PasswordUtil.hashPassword(payload.get("password"));
 
             User newUser = new User();
-            newUser.setTenant_id(Long.parseLong(payload.get("tenantId")));
+            newUser.setTenant_id(payload.get("tenantId"));
             newUser.setName(payload.get("name"));
             newUser.setPassword(password);
             newUser.setEmail(payload.get("email"));
@@ -77,7 +72,7 @@ public class UserService {
                 existingUser.setPassword(password) ;
             }
 
-            existingUser.setTenant_id(Long.parseLong(payload.get("tenantId")));
+            existingUser.setTenant_id(payload.get("tenantId"));
             existingUser.setName(payload.get("name"));
             existingUser.setEmail(payload.get("email"));
             existingUser.setRole(payload.get("role"));
@@ -96,7 +91,7 @@ public class UserService {
 
         try {
             Long id = Long.parseLong(payload.get("userId"));
-            Long tenantId = Long.parseLong(payload.get("tenantId"));
+            String tenantId = payload.get("tenantId");
             userRepository.deleteUserById(id, tenantId);
 
             result.put("result", 1);

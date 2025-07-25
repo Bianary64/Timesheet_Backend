@@ -12,7 +12,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long tenant_id;
+    private String tenant_id;
 
     private Long project_id;
 
@@ -35,7 +35,7 @@ public class Task {
     public Task() {
     }
 
-    public Task(Long tenant_id, Long project_id, String title, String task_status, Long user_id, LocalDate start_date, LocalDate end_date,
+    public Task(String tenant_id, Long project_id, String title, String task_status, Long user_id, LocalDate start_date, LocalDate end_date,
                 LocalDate created_at, LocalDate updated_at, Integer status) {
         this.tenant_id = tenant_id;
         this.project_id = project_id;
@@ -57,11 +57,11 @@ public class Task {
         this.id = id;
     }
 
-    public Long getTenant_id() {
+    public String getTenant_id() {
         return tenant_id;
     }
 
-    public void setTenant_id(Long tenant_id) {
+    public void setTenant_id(String tenant_id) {
         this.tenant_id = tenant_id;
     }
 
